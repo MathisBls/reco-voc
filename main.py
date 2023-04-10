@@ -4,7 +4,9 @@ import pyautogui
 r = sr.Recognizer()
 
 # Utilisation du microphone par défaut
-with sr.Microphone() as source:
+mic = sr.Microphone()
+
+with mic as source:
     r.adjust_for_ambient_noise(source)
 
     # Détection de seuil
@@ -15,15 +17,18 @@ with sr.Microphone() as source:
         audio = r.listen(source)
 
         try:
-            text = r.recognize_google(audio, language='en-EN')
+            text = r.recognize_google(audio, language='fr-FR', show_all=False)
             print(text)
 
-            if text == "Move Right":
-                pyautogui.press('enter')
-
+            for word in text.split():
+                if word == "droite":
+                    pyautogui.keyDown('d')
+                elif word == "saute":
+                    pyautogui.keyDown('a')
+                else:
+                    pass
 
         except sr.UnknownValueError:
-
             print("Speech Recognition could not understand audio")
 
         except sr.RequestError as e:
